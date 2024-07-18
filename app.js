@@ -2,9 +2,9 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
-const Product = require('./models/product');
+const Product = require('./models/product'); //스키마 가져오기
 
-// db 연결
+// db 연결 몽구스 연결
 mongoose.connect('mongodb://localhost:27017/cheek-market')
     .then(() => {
         console.log("Mongo connection open!")
@@ -29,6 +29,6 @@ app.get('/makeproduct', async (req, res) => {
     res.send(prod);
 })
 
-app.listen(3000, () => {
+app.listen(3000, () => { //서버연결 확인 문구
     console.log('Serving on port 3000')
 })
