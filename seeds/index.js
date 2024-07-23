@@ -18,7 +18,7 @@ const seedDb = async () => { //랜덤하게 50개의 제품 및 위치 배정하
     await Product.deleteMany({});
     for (let i = 0; i < 50; i++) {
         const prod = new Product({
-            product: `${sample(products)}`,
+            title: `${sample(products)}`,
             location: `${sample(places)}`
         })
         await prod.save();

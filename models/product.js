@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({ //메인제품 스키마
     title: String,
-    product: String,
     price: Number,
     description: String,
     location: String
