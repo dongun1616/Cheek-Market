@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 const Product = require('./models/product'); //스키마 가져오기
 
 // db 연결 몽구스 연결
@@ -19,6 +20,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }))//req.body 파싱을 허용
+app.use(methodOverride('_method')); //methodOverride 패키지를 _method로 요청을 받게만든다.
 
 // 예시 하드코딩
 // app.get('/makeproduct', async (req, res) => {
@@ -55,6 +57,24 @@ app.get('/products/:id', async (req, res) => {
     res.render('products/show', { product }) //product 불러와서 렌더링
 })
 
+// edit.ejs로 전송 수정라우트
+app.get('/products/:id/edit', async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.render('products/edit', { product })
+})
+// edit 편집폼에서 받아 제출하는 곳
+app.put('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findByIdAndUpdate(id, { ...req.body.product })
+    res.redirect(`/products/${product._id}`)
+})
+
+// delete.ejs로 전송 삭제 라우트
+app.delete('/products/:id/', async (req, res) => {
+    const { id } = req.params;
+    await Product.findByIdAndDelete(id)
+    res.redirect('/products');
+})
 
 //서버연결 확인 문구
 app.listen(3000, () => {
