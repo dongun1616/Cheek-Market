@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
+const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const Product = require('./models/product'); //스키마 가져오기
 
@@ -16,18 +17,12 @@ mongoose.connect('mongodb://localhost:27017/cheek-market')
     })
 
 
+app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }))//req.body 파싱을 허용
 app.use(methodOverride('_method')); //methodOverride 패키지를 _method로 요청을 받게만든다.
-
-// 예시 하드코딩
-// app.get('/makeproduct', async (req, res) => {
-//     const prod = new Product({ title: 'My Product', description: 'cheap product!' });
-//     await prod.save();
-//     res.send(prod);
-// })
 
 //home.ejs로 전송
 app.get('/', (req, res) => { //home.ejs로 전송
