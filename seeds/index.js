@@ -17,7 +17,7 @@ const sample = array => array[Math.floor(Math.random() * array.length)]; //랜�
 const seedDb = async () => { //랜덤하게 50개의 제품 및 위치 배정하는 함수
     await Product.deleteMany({});
     for (let i = 0; i < 50; i++) {
-        const rndPrice = Math.floor(Math.random() * 20) + 10;// 랜덤한 가격변수
+        const rndPrice = Math.floor(Math.random() * 100) * 100 + 500;// 랜덤한 가격변수
         const prod = new Product({
             title: `${sample(products)}`,
             location: `${sample(places)}`,

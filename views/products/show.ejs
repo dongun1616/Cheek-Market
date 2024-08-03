@@ -1,20 +1,33 @@
 <% layout('layouts/boilerplate') %>
-    <h1>
-        <%= product.title %>
-    </h1>
-    <h2>
-        <%= product.location %>
-    </h2>
-    <img src="<%= product.image %>" alt="">
-    <p>
-        <%= product.description %>
-    </p>
-    <p>
-    <form action="/products/<%= product._id %>?_method=DELETE" method="POST">
-        <button>Delete</button>
-    </form>
-    </p>
-    <p><a href="/products/<%= product._id %>/edit">Edit</a></p>
-    <footer>
-        <a href="/products">All Products</a>
-    </footer>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card mb-3">
+                <img src="<%= product.image %>" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= product.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= product.description %>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= product.location %>
+                    </li>
+                    <li class="list-group-item">
+                        <%= product.price %>₩
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <a class="card-link btn btn-info" href="/products/<%= product._id %>/edit">Edit</a>
+                    <form class="d-inline" action="/products/<%= product._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    2 days ago
+                </div>
+            </div>
+        </div>
+    </div>

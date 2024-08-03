@@ -16,12 +16,12 @@
                             <%= product.title %>
                         </h5>
                         <p class="card-text">
-                            <%= product.description %>
-                        </p>
-                        <p class="card-text">
                             <small class="text-muted">
                                 <%= product.location %>
                             </small>
+                        </p>
+                        <p class="card-text">
+                            <%= product.price %>₩
                         </p>
                         <a class="btn btn-primary" href="/products/<%= product._id %>">View <%= product.title %></a>
                     </div>
