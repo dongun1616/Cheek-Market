@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const catchAsync = require('./utils/catchAsync')
+const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Product = require('./models/product'); //스키마 가져오기
 
@@ -42,6 +43,7 @@ app.get('/products/new', (req, res) => {
 })
 // new 생성폼에서 받아 제출되는 곳
 app.post('/products', catchAsync(async (req, res) => {
+    if (!req.body.product) throw new ExpressError('Invalid Product Data', 400)
     const product = new Product(req.body.product);
     await product.save();
     res.redirect(`/products/${product._id}`)
@@ -72,8 +74,14 @@ app.delete('/products/:id/', catchAsync(async (req, res) => {
     res.redirect('/products');
 }))
 
-app.use((err, req, res, next) => { //오류 문구
-    res.send('Oh boy, something went wrong!')
+//모든 경로 콜백 404
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404))
+})
+
+app.use((err, req, res, next) => { //공통된 오류 문구
+    const { statusCode = 500, message = 'Something went wrong' } = err;
+    res.status(statusCode).send(message);
 })
 
 //서버연결 확인 문구
