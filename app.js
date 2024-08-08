@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
+const { productSchema } = require('./schemas')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -26,6 +27,17 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))//req.body 파싱을 허용
 app.use(methodOverride('_method')); //methodOverride 패키지를 _method로 요청을 받게만든다.
 
+// JOI 유효성 검사 함수
+const validateProduct = (req, res, next) => {
+    const { error } = productSchema.validate(req.body);
+    if (error) { //오류가 있으면 ExpressError 클래스 호출
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400);
+    } else { //유효성 검사후 잘 작동하면 next를 호출
+        next();
+    }
+}
+
 //home.ejs로 전송
 app.get('/', (req, res) => { //home.ejs로 전송
     res.render('home')
@@ -42,8 +54,9 @@ app.get('/products/new', (req, res) => {
     res.render('products/new')
 })
 // new 생성폼에서 받아 제출되는 곳
-app.post('/products', catchAsync(async (req, res) => {
-    if (!req.body.product) throw new ExpressError('Invalid Product Data', 400)
+app.post('/products', validateProduct, catchAsync(async (req, res) => {
+    // if (!req.body.product) throw new ExpressError('Invalid Product Data', 400);
+
     const product = new Product(req.body.product);
     await product.save();
     res.redirect(`/products/${product._id}`)
@@ -61,7 +74,7 @@ app.get('/products/:id/edit', catchAsync(async (req, res) => {
     res.render('products/edit', { product })
 }))
 // edit 편집폼에서 받아 제출하는 곳
-app.put('/products/:id', catchAsync(async (req, res) => {
+app.put('/products/:id', validateProduct, catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findByIdAndUpdate(id, { ...req.body.product })
     res.redirect(`/products/${product._id}`)
@@ -80,8 +93,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => { //공통된 오류 문구
-    const { statusCode = 500, message = 'Something went wrong' } = err;
-    res.status(statusCode).send(message);
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Oh No, Something went wrong!'
+    res.status(statusCode).render('error', { err })
 })
 
 //서버연결 확인 문구
