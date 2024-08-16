@@ -3,11 +3,12 @@ const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const { productSchema } = require('./schemas')
+const { productSchema, reviewSchema } = require('./schemas')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Product = require('./models/product'); //스키마 가져오기
+const Review = require('./models/review');
 
 // db 연결 몽구스 연결
 mongoose.connect('mongodb://localhost:27017/cheek-market')
@@ -27,9 +28,19 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))//req.body 파싱을 허용
 app.use(methodOverride('_method')); //methodOverride 패키지를 _method로 요청을 받게만든다.
 
-// JOI 유효성 검사 함수
+// JOI 제품 유효성 검사 함수
 const validateProduct = (req, res, next) => {
     const { error } = productSchema.validate(req.body);
+    if (error) { //오류가 있으면 ExpressError 클래스 호출
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400);
+    } else { //유효성 검사후 잘 작동하면 next를 호출
+        next();
+    }
+}
+// JOI 리뷰 유효성 검사 함수
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if (error) { //오류가 있으면 ExpressError 클래스 호출
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400);
@@ -85,6 +96,16 @@ app.delete('/products/:id/', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Product.findByIdAndDelete(id)
     res.redirect('/products');
+}))
+
+// 제품에 리뷰작성하는 라우트(사용자 모델 생성시 옮기기)
+app.post('/products/:id/reviews', validateReview, catchAsync(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    const review = new Review(req.body.review);
+    product.reviews.push(review);
+    await review.save();
+    await product.save();
+    res.redirect(`/products/${product._id}`);
 }))
 
 //모든 경로 콜백 404

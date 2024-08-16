@@ -11,3 +11,9 @@ module.exports.productSchema = Joi.object({
     }).required()
 })
 
+module.exports.reviewSchema = Joi.object({
+    review: Joi.object({
+        body: Joi.string().required(),
+        image: Joi.string(),
+    }).required()
+})
