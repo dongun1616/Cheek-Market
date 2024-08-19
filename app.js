@@ -75,7 +75,7 @@ app.post('/products', validateProduct, catchAsync(async (req, res) => {
 
 // show.ejs로 전송 상세라우트
 app.get('/products/:id', catchAsync(async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate('reviews')
     res.render('products/show', { product }) //product 불러와서 렌더링
 }))
 
@@ -106,6 +106,14 @@ app.post('/products/:id/reviews', validateReview, catchAsync(async (req, res) =>
     await review.save();
     await product.save();
     res.redirect(`/products/${product._id}`);
+}))
+
+// 제품에 리뷰를 삭제하는 라우트
+app.delete('/products/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Product.findByIdAndUpdate(id, { $pull: { reviews: reviewId } })
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/products/${id}`);
 }))
 
 //모든 경로 콜백 404
