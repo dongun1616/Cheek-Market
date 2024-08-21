@@ -29,15 +29,19 @@ router.get('/new', (req, res) => {
 // new 생성폼에서 받아 제출되는 곳
 router.post('/', validateProduct, catchAsync(async (req, res) => {
     // if (!req.body.product) throw new ExpressError('Invalid Product Data', 400);
-
     const product = new Product(req.body.product);
     await product.save();
+    req.flash('success', 'Successfully made a new product!');
     res.redirect(`/products/${product._id}`)
 }))
 
 // show.ejs로 전송 상세라우트
 router.get('/:id', catchAsync(async (req, res) => {
     const product = await Product.findById(req.params.id).populate('reviews')
+    if (!product) {
+        req.flash('error', 'Cannot find that product!');
+        return res.redirect('/products')
+    }
     res.render('products/show', { product }) //product 불러와서 렌더링
 }))
 
@@ -50,6 +54,7 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
 router.put('/:id', validateProduct, catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findByIdAndUpdate(id, { ...req.body.product })
+    req.flash('success', 'Successfully updated product!')
     res.redirect(`/products/${product._id}`)
 }))
 
@@ -57,6 +62,7 @@ router.put('/:id', validateProduct, catchAsync(async (req, res) => {
 router.delete('/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Product.findByIdAndDelete(id)
+    req.flash('success', 'Successfully deleted product!')
     res.redirect('/products');
 }))
 
