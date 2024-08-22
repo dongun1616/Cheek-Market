@@ -45,6 +45,7 @@ router.get('/:id', catchAsync(async (req, res) => {
     res.render('products/show', { product }) //product 불러와서 렌더링
 }))
 
+
 // edit.ejs로 전송 수정라우트
 router.get('/:id/edit', catchAsync(async (req, res) => {
     const product = await Product.findById(req.params.id);

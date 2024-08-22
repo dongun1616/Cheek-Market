@@ -7,9 +7,13 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
-const products = require('./routes/products'); //제품 라우트 가져오기
-const reviews = require('./routes/reviews'); //리뷰 라우트 가져오기
+const userRoutes = require('./routes/users') //유저 라우트 가져오기
+const productRoutes = require('./routes/products'); //제품 라우트 가져오기
+const reviewRoutes = require('./routes/reviews'); //리뷰 라우트 가져오기
 
 // db 연결 몽구스 연결
 mongoose.connect('mongodb://localhost:27017/cheek-market')
@@ -42,7 +46,17 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig));
-app.use(flash());
+app.use(flash()); //flash 사용
+
+//passport 세팅
+app.use(passport.initialize());
+app.use(passport.session());
+//authenticate는 passport localstrategy에서 사용되는 함수를 생성
+passport.use(new LocalStrategy(User.authenticate()));
+//직렬화는 어떻게 데이터를 얻고 세션에서 사용자를 저장하는지를 참조한다.
+passport.serializeUser(User.serializeUser()); //직렬화
+passport.deserializeUser(User.deserializeUser()); //역직렬화
+
 
 // flash 세팅
 app.use((req, res, next) => {
@@ -51,8 +65,18 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use('/products', products); //제품 라우트 지정
-app.use('/products/:id/reviews', reviews); //리뷰 라우트 지정
+// 로그인 하드코딩
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({ email: 'dong@gmail.com', username: 'dong' })
+    const newUser = await User.register(user, 'chicken');
+    //주어진 암호로 새로운 사용자 인스턴스를 등록하는 메서드이다.(중복여부도 확인)
+    res.send(newUser);
+})
+
+//라우트 접두사 지정
+app.use('/', userRoutes); //유저 라우트 지정
+app.use('/products', productRoutes); //제품 라우트 지정
+app.use('/products/:id/reviews', reviewRoutes); //리뷰 라우트 지정
 
 //home.ejs로 전송
 app.get('/', (req, res) => { //home.ejs로 전송
