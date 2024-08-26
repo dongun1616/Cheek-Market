@@ -3,7 +3,7 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync')
 const User = require('../models/user');
 const passport = require('passport');
-const { storeReturnTo } = require('../middleware');
+const { storeReturnTo, isLoggedIn } = require('../middleware');
 
 //회원가입 라우트
 router.get('/register', (req, res) => {
@@ -12,8 +12,8 @@ router.get('/register', (req, res) => {
 //회원가입 제출 라우트
 router.post('/register', catchAsync(async (req, res, next) => {
     try {
-        const { email, username, password } = req.body;
-        const user = new User({ email, username });
+        const { email, username, password, introduce } = req.body;
+        const user = new User({ email, username, introduce });
         const registerdUser = await User.register(user, password);
         req.login(registerdUser, err => {
             if (err) return next(err);
@@ -31,6 +31,8 @@ router.get('/login', (req, res) => {
     res.render('users/login');
 })
 router.post('/login', storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+    const user = new User(req.body.user);
+    console.log(user);
     req.flash('success', 'Welcome back!');
     const redirectUrl = res.locals.returnTo || '/products';
     res.redirect(redirectUrl);
@@ -48,9 +50,9 @@ router.get('/logout', (req, res, next) => {
 });
 
 //profile.ejs로 전송 라우트
-// router.get('/users', catchAsync(async (req, res) => {
-//     const user = await User.findById(req.params).populate('reviews')
-//     res.render('products/profile', { user })
-// }))
+router.get('/users/:id', isLoggedIn, catchAsync(async (req, res) => {
+    const user = await User.findById(req.params.id).populate('reviews')
+    res.render('users/profile', { user })
+}))
 
 module.exports = router;

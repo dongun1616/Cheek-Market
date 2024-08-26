@@ -6,6 +6,7 @@ const { isLoggedIn } = require('../middleware')
 
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product'); //스키마 가져오기
+const User = require('../models/user') //스키마 가져오기
 
 
 // JOI 제품 유효성 검사 함수
@@ -26,7 +27,7 @@ router.get('/', catchAsync(async (req, res) => {
 }))
 
 // new.ejs로 전송 생성라우트(new 라우트는 :id를 사용한 라우트보다 위에 있어야 한다.)
-router.get('/new', isLoggedIn, (req, res) => {
+router.get('/new', (req, res) => {
     res.render('products/new')
 })
 // new 생성폼에서 받아 제출되는 곳
@@ -47,7 +48,6 @@ router.get('/:id', catchAsync(async (req, res) => {
     }
     res.render('products/show', { product }) //product 불러와서 렌더링
 }))
-
 
 // edit.ejs로 전송 수정라우트
 router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
