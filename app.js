@@ -53,13 +53,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 //authenticate는 passport localstrategy에서 사용되는 함수를 생성
 passport.use(new LocalStrategy(User.authenticate()));
-//직렬화는 어떻게 데이터를 얻고 세션에서 사용자를 저장하는지를 참조한다.
+//세션에 정보를 어떻게 저장하고 가져오는지를 결정하는 메서드
 passport.serializeUser(User.serializeUser()); //직렬화
 passport.deserializeUser(User.deserializeUser()); //역직렬화
 
 
 // flash 세팅
 app.use((req, res, next) => {
+    console.log(req.session)
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error')
     next();
