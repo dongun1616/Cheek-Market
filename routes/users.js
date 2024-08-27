@@ -12,8 +12,8 @@ router.get('/register', (req, res) => {
 //회원가입 제출 라우트
 router.post('/register', catchAsync(async (req, res, next) => {
     try {
-        const { email, username, password, introduce } = req.body;
-        const user = new User({ email, username, introduce });
+        const { email, username, password, introduce, location } = req.body;
+        const user = new User({ email, username, introduce, location });
         const registerdUser = await User.register(user, password);
         req.login(registerdUser, err => {
             if (err) return next(err);
@@ -52,6 +52,10 @@ router.get('/logout', (req, res, next) => {
 //profile.ejs로 전송 라우트
 router.get('/users/:id', isLoggedIn, catchAsync(async (req, res) => {
     const user = await User.findById(req.params.id).populate('reviews')
+    if (!user) {
+        req.flash('error', 'Cannot find that user!');
+        return res.redirect('/products')
+    }
     res.render('users/profile', { user })
 }))
 

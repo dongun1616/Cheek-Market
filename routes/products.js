@@ -6,7 +6,6 @@ const { isLoggedIn } = require('../middleware')
 
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product'); //스키마 가져오기
-const User = require('../models/user') //스키마 가져오기
 
 
 // JOI 제품 유효성 검사 함수

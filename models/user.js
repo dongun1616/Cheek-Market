@@ -9,6 +9,7 @@ const UserSchema = new Schema({
         unique: true
     },
     introduce: String,
+    location: String,
     reviews: [
         {
             type: Schema.Types.ObjectId,

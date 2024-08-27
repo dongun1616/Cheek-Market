@@ -14,6 +14,7 @@ const User = require('./models/user');
 const userRoutes = require('./routes/users') //유저 라우트 가져오기
 const productRoutes = require('./routes/products'); //제품 라우트 가져오기
 const reviewRoutes = require('./routes/reviews'); //리뷰 라우트 가져오기
+const userReviewRoutes = require('./routes/userreviews'); //유저 리뷰 라우트 가져오기
 
 // db 연결 몽구스 연결
 mongoose.connect('mongodb://localhost:27017/cheek-market')
@@ -60,7 +61,6 @@ passport.deserializeUser(User.deserializeUser()); //역직렬화
 
 // flash 세팅
 app.use((req, res, next) => {
-    // console.log(req.session)
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error')
@@ -79,6 +79,7 @@ app.get('/fakeUser', async (req, res) => {
 app.use('/', userRoutes); //유저 라우트 지정
 app.use('/products', productRoutes); //제품 라우트 지정
 app.use('/products/:id/reviews', reviewRoutes); //리뷰 라우트 지정
+app.use('/users/:id/reviews', userReviewRoutes); //유저 리뷰 라우트 지정
 
 //home.ejs로 전송
 app.get('/', (req, res) => { //home.ejs로 전송
