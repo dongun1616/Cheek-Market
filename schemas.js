@@ -14,8 +14,8 @@ module.exports.productSchema = Joi.object({
 module.exports.userSchema = Joi.object({
     user: Joi.object({
         email: Joi.string().required(),
-        introduce: Joi.string(),
-        location: Joi.string,
+        location: Joi.string().required(),
+        introduce: Joi.string().required(),
     }).required()
 })
 

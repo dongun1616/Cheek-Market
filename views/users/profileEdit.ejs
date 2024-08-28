@@ -1,0 +1,34 @@
+<% layout('layouts/boilerplate') %>
+    <div class="row">
+        <h1 class="text-center">Edit User</h1>
+        <div class="col-6 offset-3">
+            <form action="/users/<%= user._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+                <div class=" mb-3">
+                    <label class="form-label" for="introduce">Introduce</label>
+                    <textarea class="form-control" type="text" id="introduce" name="user[introduce]"
+                        required><%= user.introduce %></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class=" mb-3">
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-control" type="email" id="email" name="user[email]" value="<%= user.email %>"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class=" mb-3">
+                    <label class="form-label" for="location">Location</label>
+                    <input class="form-control" type="text" id="location" name="user[location]"
+                        value="<%= user.location %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class=" mb-3"><button class="btn btn-info">Update User</button></div>
+            </form>
+            <a href="/users/<%= user._id %>">Back to Users</a>
+        </div>
+    </div>
