@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync')
 const { productSchema } = require('../schemas')
-const { isLoggedIn } = require('../middleware')
+const { isLoggedIn, isAuthorProduct } = require('../middleware')
 
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product'); //스키마 가져오기
@@ -21,18 +21,19 @@ const validateProduct = (req, res, next) => {
 
 // 메인(index.ejs) 전송 메인라우트
 router.get('/', catchAsync(async (req, res) => {
-    const products = await Product.find({});
+    const products = await Product.find({}).populate('author');
     res.render('products/index', { products }) //products 불러와서 렌더링
 }))
 
 // 제품생성(new.ejs)전송라우트(new 라우트는 :id를 사용한 라우트보다 위에 있어야 한다.)
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('products/new')
 })
 // 제품생성(new.ejs) 제출라우트
 router.post('/', isLoggedIn, validateProduct, catchAsync(async (req, res) => {
     // if (!req.body.product) throw new ExpressError('Invalid Product Data', 400);
     const product = new Product(req.body.product);
+    product.author = req.user._id;
     await product.save();
     req.flash('success', 'Successfully made a new product!');
     res.redirect(`/products/${product._id}`)
@@ -40,7 +41,12 @@ router.post('/', isLoggedIn, validateProduct, catchAsync(async (req, res) => {
 
 // 제품상세(show.ejs) 전송라우트
 router.get('/:id', catchAsync(async (req, res) => {
-    const product = await Product.findById(req.params.id).populate('reviews')
+    const product = await Product.findById(req.params.id).populate({ //중첩 채우기 
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    }).populate('author');
     if (!product) {
         req.flash('error', 'Cannot find that product!');
         return res.redirect('/products')
@@ -49,12 +55,17 @@ router.get('/:id', catchAsync(async (req, res) => {
 }))
 
 // 제품수정(edit.ejs) 전송라우트
-router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
-    const product = await Product.findById(req.params.id);
+router.get('/:id/edit', isLoggedIn, isAuthorProduct, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) {
+        req.flash('error', 'Cannot find that product!');
+        return res.redirect('/products');
+    }
     res.render('products/edit', { product })
 }))
 // 제품수정(edit.ejs) 폼에서 받아 제출라우트
-router.put('/:id', isLoggedIn, validateProduct, catchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, isAuthorProduct, validateProduct, catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findByIdAndUpdate(id, { ...req.body.product })
     req.flash('success', 'Successfully updated product!')
@@ -62,7 +73,7 @@ router.put('/:id', isLoggedIn, validateProduct, catchAsync(async (req, res) => {
 }))
 
 // 제품 삭제 라우트
-router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, isAuthorProduct, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Product.findByIdAndDelete(id)
     req.flash('success', 'Successfully deleted product!')

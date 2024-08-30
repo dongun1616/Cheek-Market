@@ -3,7 +3,7 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync')
 const passport = require('passport');
 const { userSchema } = require('../schemas')
-const { storeReturnTo, isLoggedIn } = require('../middleware');
+const { storeReturnTo, isLoggedIn, isAuthorProfile } = require('../middleware');
 
 const ExpressError = require('../utils/ExpressError');
 const User = require('../models/user');
@@ -65,8 +65,13 @@ router.get('/logout', (req, res, next) => {
 });
 
 //프로필(profile.ejs) 전송 라우트
-router.get('/users/:id', isLoggedIn, catchAsync(async (req, res) => {
-    const user = await User.findById(req.params.id).populate('reviews')
+router.get('/users/:id', catchAsync(async (req, res) => {
+    const user = await User.findById(req.params.id).populate({ //중첩 채우기 
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    })
     if (!user) {
         req.flash('error', 'Cannot find that user!');
         return res.redirect('/products')
@@ -75,12 +80,13 @@ router.get('/users/:id', isLoggedIn, catchAsync(async (req, res) => {
 }))
 
 // 프로필편집(profileEdit.ejs) 수정라우트
-router.get('/users/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
-    const user = await User.findById(req.params.id);
+router.get('/users/:id/edit', isLoggedIn, isAuthorProfile, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
     res.render('users/profileEdit', { user })
 }))
 //프로필편집(profileEdit.ejs) 폼에서 받아 제출하는 곳
-router.put('/users/:id', isLoggedIn, validateUser, catchAsync(async (req, res) => {
+router.put('/users/:id', isLoggedIn, isAuthorProfile, validateUser, catchAsync(async (req, res) => {
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, { ...req.body.user })
     req.flash('success', 'Successfully updated users!')
@@ -88,7 +94,7 @@ router.put('/users/:id', isLoggedIn, validateUser, catchAsync(async (req, res) =
 }))
 
 // 프로필 삭제 라우트
-router.delete('/users/:id', isLoggedIn, catchAsync(async (req, res) => {
+router.delete('/users/:id', isLoggedIn, isAuthorProfile, catchAsync(async (req, res) => {
     const { id } = req.params;
     await User.findByIdAndDelete(id)
     req.flash('success', 'Successfully deleted user!')

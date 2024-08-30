@@ -8,6 +8,10 @@ const ProductSchema = new Schema({ //메인제품 스키마
     price: Number,
     description: String,
     location: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
