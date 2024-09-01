@@ -6,6 +6,8 @@ const { isLoggedIn, isAuthorProduct } = require('../middleware')
 
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product'); //스키마 가져오기
+const User = require('../models/user');
+const Review = require('../models/review');
 
 
 // JOI 제품 유효성 검사 함수
@@ -32,9 +34,12 @@ router.get('/new', isLoggedIn, (req, res) => {
 // 제품생성(new.ejs) 제출라우트
 router.post('/', isLoggedIn, validateProduct, catchAsync(async (req, res) => {
     // if (!req.body.product) throw new ExpressError('Invalid Product Data', 400);
+    const user = await User.findById(req.user.id);
     const product = new Product(req.body.product);
+    user.products.push(product)
     product.author = req.user._id;
     await product.save();
+    await user.save();
     req.flash('success', 'Successfully made a new product!');
     res.redirect(`/products/${product._id}`)
 }))

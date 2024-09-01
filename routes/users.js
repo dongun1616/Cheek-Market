@@ -7,6 +7,8 @@ const { storeReturnTo, isLoggedIn, isAuthorProfile } = require('../middleware');
 
 const ExpressError = require('../utils/ExpressError');
 const User = require('../models/user');
+const Product = require('../models/product');
+const Review = require('../models/review');
 
 // JOI 사용자 유효성 검사 함수
 const validateUser = (req, res, next) => {
@@ -26,8 +28,8 @@ router.get('/register', (req, res) => {
 //회원가입(register.ejs) 제출 라우트
 router.post('/register', catchAsync(async (req, res, next) => {
     try {
-        const { email, username, password, introduce, location } = req.body;
-        const user = new User({ email, username, introduce, location });
+        const { email, username, password, introduce, location, reviews, products } = req.body;
+        const user = new User({ email, username, introduce, location, reviews, products });
         const registerdUser = await User.register(user, password);
         req.login(registerdUser, err => {
             if (err) return next(err);
@@ -96,9 +98,15 @@ router.put('/users/:id', isLoggedIn, isAuthorProfile, validateUser, catchAsync(a
 // 프로필 삭제 라우트
 router.delete('/users/:id', isLoggedIn, isAuthorProfile, catchAsync(async (req, res) => {
     const { id } = req.params;
+    await Product.findOneAndDelete({ author: id })
+    await Product.findOneAndDelete({ reviews: id })
+    await Review.findOneAndDelete({ author: id })
+    await User.findOneAndDelete({ products: id })
+    await User.findOneAndDelete({ reviews: id })
     await User.findByIdAndDelete(id)
     req.flash('success', 'Successfully deleted user!')
     res.redirect('/products');
 }))
+
 
 module.exports = router;

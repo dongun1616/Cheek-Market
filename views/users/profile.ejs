@@ -43,23 +43,25 @@
                 </form>
                 <% } %>
                     <% for(let review of user.reviews){ %>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><a href="/users/<%= review.author._id %>">
-                                        <%= review.author.username %>
-                                    </a>
-                                </h5>
-                                <p class="card-text">
-                                    Review: <%= review.body %>
-                                </p>
-                                <% if(currentUser && review.author.equals(currentUser._id)){ %>
-                                    <form action="/users/<%= user._id %>/reviews/<%= review._id %>?_method=DELETE"
-                                        method="POST">
-                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-                                    <% } %>
+                        <% if(review.author){%>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="/users/<%= review.author._id %>">
+                                            <%= review.author.username %>
+                                        </a>
+                                    </h5>
+                                    <p class="card-text">
+                                        Review: <%= review.body %>
+                                    </p>
+                                    <% if(currentUser && review.author.equals(currentUser._id)){ %>
+                                        <form action="/users/<%= user._id %>/reviews/<%= review._id %>?_method=DELETE"
+                                            method="POST">
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                        <% } %>
+                                </div>
                             </div>
-                        </div>
-                        <% } %>
+                            <% } %>
+                                <% } %>
         </div>
     </div>

@@ -19,7 +19,7 @@ const seedDb = async () => { //랜덤하게 50개의 제품 및 위치 배정하
     for (let i = 0; i < 50; i++) {
         const rndPrice = Math.floor(Math.random() * 100) * 100 + 500;// 랜덤한 가격변수
         const prod = new Product({
-            author: '66cc8b065ddf4d679448c2a8',
+            author: '66d470a16415f86aca8b55a2',
             title: `${sample(products)}`,
             location: `${sample(places)}`,
             image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1099&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D/800x600',
