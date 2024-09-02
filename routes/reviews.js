@@ -22,7 +22,7 @@ const validateReview = (req, res, next) => {
 
 // 제품에 리뷰작성하는 라우트
 router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id)
     const review = new Review(req.body.review);
     review.author = req.user._id;
     product.reviews.push(review);

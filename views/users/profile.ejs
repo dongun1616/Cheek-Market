@@ -5,13 +5,15 @@
                 <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <%= user.username %>
+                        <%= user.nickname %>
                     </h5>
                     <p class="card-text">
                         <%= user.introduce %>
                     </p>
                 </div>
                 <ul class="list-group list-group-flush">
+                    <li class="list-group-item">ID : <%= user.username %>
+                    </li>
                     <li class="list-group-item">Email : <%= user.email %>
                     </li>
                     <li class="list-group-item">Location : <%= user.location %>
@@ -43,25 +45,23 @@
                 </form>
                 <% } %>
                     <% for(let review of user.reviews){ %>
-                        <% if(review.author){%>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="/users/<%= review.author._id %>">
-                                            <%= review.author.username %>
-                                        </a>
-                                    </h5>
-                                    <p class="card-text">
-                                        Review: <%= review.body %>
-                                    </p>
-                                    <% if(currentUser && review.author.equals(currentUser._id)){ %>
-                                        <form action="/users/<%= user._id %>/reviews/<%= review._id %>?_method=DELETE"
-                                            method="POST">
-                                            <button class="btn btn-sm btn-danger">Delete</button>
-                                        </form>
-                                        <% } %>
-                                </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="/users/<%= review.author._id %>">
+                                        <%= review.author.username %>
+                                    </a>
+                                </h5>
+                                <p class="card-text">
+                                    Review: <%= review.body %>
+                                </p>
+                                <% if(currentUser && review.author.equals(currentUser._id)){ %>
+                                    <form action="/users/<%= user._id %>/reviews/<%= review._id %>?_method=DELETE"
+                                        method="POST">
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                    <% } %>
                             </div>
-                            <% } %>
-                                <% } %>
+                        </div>
+                        <% } %>
         </div>
     </div>

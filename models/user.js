@@ -6,6 +6,11 @@ const Product = require('./product');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const UserSchema = new Schema({
+    nickname: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     email: {
         type: String,
         required: true,
@@ -29,7 +34,7 @@ const UserSchema = new Schema({
 //로그인시 필요한 사용자 이름과 비번을 사용하게해주는 플러그인
 UserSchema.plugin(passportLocalMongoose);
 
-//사용자 삭제시 제품을 같이 삭제시키는 미들웨어
+// //사용자 삭제시 제품을 같이 삭제시키는 미들웨어
 UserSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
         await Product.deleteMany({
@@ -39,9 +44,9 @@ UserSchema.post('findOneAndDelete', async function (doc) {
         })
     }
 })
+
 // //사용자 삭제시 리뷰을 같이 삭제시키는 미들웨어
 UserSchema.post('findOneAndDelete', async function (doc) {
-    console.log(doc)
     if (doc) {
         await Review.deleteMany({
             _id: {
@@ -50,5 +55,6 @@ UserSchema.post('findOneAndDelete', async function (doc) {
         })
     }
 })
+
 
 module.exports = mongoose.model('User', UserSchema)

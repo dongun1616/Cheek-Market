@@ -4,9 +4,9 @@
         <div class="col-6 offset-3">
             <form action="/users/<%= user._id%>?_method=PUT" method="POST" novalidate class="validated-form">
                 <div class=" mb-3">
-                    <label class="form-label" for="introduce">Introduce</label>
-                    <textarea class="form-control" type="text" id="introduce" name="user[introduce]"
-                        required><%= user.introduce %></textarea>
+                    <label class="form-label" for="nickname">Nickname</label>
+                    <input class="form-control" type="text" id="nickname" name="user[nickname]"
+                        value="<%= user.nickname %>" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -23,6 +23,14 @@
                     <label class="form-label" for="location">Location</label>
                     <input class="form-control" type="text" id="location" name="user[location]"
                         value="<%= user.location %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class=" mb-3">
+                    <label class="form-label" for="introduce">Introduce</label>
+                    <textarea class="form-control" type="text" id="introduce" name="user[introduce]"
+                        required><%= user.introduce %></textarea>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
