@@ -34,8 +34,9 @@ module.exports.isAuthorProduct = async (req, res, next) => {
 
 // 사용자 프로필 편집/삭제 권한을 확인하는 미들웨어
 module.exports.isAuthorProfile = async (req, res, next) => {
-    const { id } = req.params;
+    const { id } = req.user;
     const user = await User.findById(id);
+    console.log(user)
     if (!user._id.equals(req.user._id)) {
         req.flash('error', 'You do not have permission to do that!');
         return res.redirect(`/users/${id}`)
