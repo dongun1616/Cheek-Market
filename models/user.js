@@ -56,5 +56,4 @@ UserSchema.post('findOneAndDelete', async function (doc) {
     }
 })
 
-
 module.exports = mongoose.model('User', UserSchema)

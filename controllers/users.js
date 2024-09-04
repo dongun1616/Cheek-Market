@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Review = require('../models/review');
 
 //회원가입(register.ejs) 전송 라우트
 module.exports.renderRegister = (req, res) => {
@@ -28,7 +29,6 @@ module.exports.renderLogin = (req, res) => {
 //로그인(login.ejs) 제출 라우트
 module.exports.login = (req, res) => {
     const user = new User(req.body.user);
-    console.log(user);
     req.flash('success', 'Welcome back!');
     const redirectUrl = res.locals.returnTo || '/products';
     res.redirect(redirectUrl);
@@ -43,4 +43,45 @@ module.exports.logout = (req, res, next) => {
         req.flash('success', 'Goodbye!');
         res.redirect('/products');
     });
+}
+
+//프로필(profile.ejs) 전송 라우트
+module.exports.renderProfile = async (req, res) => {
+    const user = await User.findById(req.params.id).populate({ //중첩 채우기 
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    })
+    if (!user) {
+        req.flash('error', 'Cannot find that user!');
+        return res.redirect('/products')
+    }
+    res.render('users/profile', { user })
+}
+
+// 프로필편집(profileEdit.ejs) 수정라우트
+module.exports.renderEditProfile = async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    res.render('users/profileEdit', { user })
+}
+//프로필편집(profileEdit.ejs) 폼에서 받아 제출하는 곳
+module.exports.editProfile = async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findByIdAndUpdate(id, { ...req.body.user })
+    req.flash('success', 'Successfully updated users!')
+    res.redirect(`/users/${user._id}`)
+}
+
+// 프로필 삭제 라우트
+module.exports.deleteProfile = async (req, res) => {
+    const { id } = req.params;
+    // 리뷰 작성자 삭제 반복문
+    while (await Review.findOne({ author: id })) {
+        await Review.findOneAndDelete({ author: id })
+    }
+    await User.findByIdAndDelete(id)
+    req.flash('success', 'Successfully deleted user!')
+    res.redirect('/products');
 }

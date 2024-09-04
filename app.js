@@ -12,7 +12,7 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 const userRoutes = require('./routes/users') //유저 라우트 가져오기
-const profileRoutes = require('./routes/profiles') //프로필 라우트 가져오기
+// const profileRoutes = require('./routes/profiles') //프로필 라우트 가져오기
 const productRoutes = require('./routes/products'); //제품 라우트 가져오기
 const reviewRoutes = require('./routes/reviews'); //리뷰 라우트 가져오기
 const userReviewRoutes = require('./routes/userReviews');//유저 리뷰 라우트 가져오기
@@ -78,7 +78,6 @@ app.get('/fakeUser', async (req, res) => {
 
 //라우트 접두사 지정
 app.use('/', userRoutes); //유저 라우트 지정
-app.use('/users/:id', profileRoutes); //프로필 라우트 지정
 app.use('/products', productRoutes); //제품 라우트 지정
 app.use('/products/:id/reviews', reviewRoutes); //리뷰 라우트 지정
 app.use('/users/:id/reviews', userReviewRoutes); //유저 리뷰 라우트 지정
