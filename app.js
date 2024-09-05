@@ -12,7 +12,6 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 const userRoutes = require('./routes/users') //유저 라우트 가져오기
-// const profileRoutes = require('./routes/profiles') //프로필 라우트 가져오기
 const productRoutes = require('./routes/products'); //제품 라우트 가져오기
 const reviewRoutes = require('./routes/reviews'); //리뷰 라우트 가져오기
 const userReviewRoutes = require('./routes/userReviews');//유저 리뷰 라우트 가져오기

@@ -9,9 +9,18 @@
                     <h5 class="card-title">
                         <%= user.nickname %>
                     </h5>
-                    <p class="card-text">
-                        <%= user.introduce %>
-                    </p>
+                    <% if(user.reviews){ %>
+                        <div class="d-flex flex-row justify-content-start">
+                            <p class="card-text mr-20">
+                                <%= user.avgReviewPoint %>
+                            </p>
+                            <p class="starability-result" data-rating="<%= user.avgReviewRound %>">
+                            </p>
+                        </div>
+                        <% } %>
+                            <p class="card-text">
+                                <%= user.introduce %>
+                            </p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">ID : <%= user.username %>

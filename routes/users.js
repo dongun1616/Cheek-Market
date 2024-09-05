@@ -7,6 +7,8 @@ const { userSchema } = require('../schemas')
 const { storeReturnTo, isLoggedIn, isAuthorProfile } = require('../middleware');
 
 const ExpressError = require('../utils/ExpressError');
+const Review = require('../models/review')
+const User = require('../models/user')
 
 const validateProfile = (req, res, next) => {
     const { error } = userSchema.validate(req.body);

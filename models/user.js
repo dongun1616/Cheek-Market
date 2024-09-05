@@ -29,7 +29,9 @@ const UserSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Review'
         }
-    ]
+    ],
+    avgReviewRound: Number,
+    avgReviewPoint: Number,
 });
 //로그인시 필요한 사용자 이름과 비번을 사용하게해주는 플러그인
 UserSchema.plugin(passportLocalMongoose);
