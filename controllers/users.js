@@ -8,8 +8,8 @@ module.exports.renderRegister = (req, res) => {
 //회원가입(register.ejs) 제출 라우트
 module.exports.register = async (req, res, next) => {
     try {
-        const { email, username, password, introduce, location, reviews, products, nickname, avgReviewRound, avgReviewPoint } = req.body;
-        const user = new User({ email, username, introduce, location, reviews, products, nickname, avgReviewRound, avgReviewPoint });
+        const { email, username, password, introduce, location, reviews, products, nickname } = req.body;
+        const user = new User({ email, username, introduce, location, reviews, products, nickname });
         const registerdUser = await User.register(user, password);
         req.login(registerdUser, err => {
             if (err) return next(err);
@@ -53,25 +53,21 @@ module.exports.renderProfile = async (req, res) => {
             path: 'author'
         }
     })
-    // 사용자 리뷰 평균을 계산하는 함수
-    const avgReview = await Review.aggregate([
-        {
-            $group: {
-                _id: null,
-                avgReview: { $avg: "$rating" }
-            }
-        }
-    ])
-    // 사용자 리뷰 평균 반올림
-    user.avgReviewRound = Math.round(avgReview[0].avgReview)
-    // 사용자 리뷰 평균 소수점
-    user.avgReviewPoint = Math.round(avgReview[0].avgReview * 10) / 10
-    await user.save()
+    // 사용자 리뷰의 평균을 구하는 함수
+    let sumReview = 0;
+    for (let i = 0; i < user.reviews.length; i++) {
+        sumReview += user.reviews[i].rating;
+    }
+    const avgReview = sumReview / user.reviews.length;
+    // //사용자 리뷰 평균 반올림
+    const avgReviewRound = Math.round(avgReview)
+    // // 사용자 리뷰 평균 소수점
+    const avgReviewPoint = Math.round(avgReview * 10) / 10
     if (!user) {
         req.flash('error', 'Cannot find that user!');
         return res.redirect('/products')
     }
-    res.render('users/profile', { user })
+    res.render('users/profile', { user, avgReviewRound, avgReviewPoint })
 }
 
 // 프로필편집(profileEdit.ejs) 수정라우트
