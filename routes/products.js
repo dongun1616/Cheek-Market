@@ -4,6 +4,9 @@ const catchAsync = require('../utils/catchAsync')
 const products = require('../controllers/products');
 const { productSchema } = require('../schemas')
 const { isLoggedIn, isAuthorProduct } = require('../middleware')
+const multer = require('multer');
+const { storage } = require('../cloudinary');
+const upload = multer({ storage })
 
 const ExpressError = require('../utils/ExpressError');
 
@@ -24,7 +27,7 @@ router.get('/', catchAsync(products.index))
 // 제품생성(new.ejs)전송라우트(new 라우트는 :id를 사용한 라우트보다 위에 있어야 한다.)
 router.get('/new', isLoggedIn, products.renderNewForm)
 // 제품생성(new.ejs) 제출라우트
-router.post('/', isLoggedIn, validateProduct, catchAsync(products.createProduct))
+router.post('/', isLoggedIn, upload.array('image'), validateProduct, catchAsync(products.createProduct))
 
 // 제품상세(show.ejs) 전송라우트
 router.get('/:id', catchAsync(products.showProduct))

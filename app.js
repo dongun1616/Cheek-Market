@@ -1,3 +1,8 @@
+// 개발모드에서 .env에 접근 가능하게 하는 함수
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const path = require('path');
 const app = express();

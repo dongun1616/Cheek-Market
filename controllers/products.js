@@ -15,8 +15,9 @@ module.exports.renderNewForm = (req, res) => {
 module.exports.createProduct = async (req, res) => {
     const user = await User.findById(req.user.id);
     const product = new Product(req.body.product);
-    user.products.push(product)
+    product.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     product.author = req.user._id;
+    user.products.push(product)
     await product.save();
     await user.save();
     req.flash('success', 'Successfully made a new product!');

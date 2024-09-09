@@ -22,9 +22,14 @@ const seedDb = async () => { //랜덤하게 50개의 제품 및 위치 배정하
             author: '66d5e2018683632c62efebd7',
             title: `${sample(products)}`,
             location: `${sample(places)}`,
-            image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1099&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D/800x600',
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit Illo iure blanditiis rem nulla assumenda aperiam similique nostrum tempore dolore sequi suscipit provident reiciendis quasi doloremque sit id ut temporibus corrupti',
-            price: rndPrice
+            price: rndPrice,
+            images: [
+                {
+                    url: 'https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif',
+                    filename: 'Cheek-Market/w8rlv1gs1g8dfa9stzx9',
+                }
+            ]
         })
         await prod.save();
     }
