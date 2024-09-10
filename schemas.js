@@ -8,7 +8,8 @@ module.exports.productSchema = Joi.object({
         // image: Joi.string().required(),
         location: Joi.string().required(),
         description: Joi.string().required(),
-    }).required()
+    }).required(),
+    deleteImages: Joi.array()
 })
 
 module.exports.userSchema = Joi.object({
@@ -24,6 +25,5 @@ module.exports.reviewSchema = Joi.object({
     review: Joi.object({
         body: Joi.string().required(),
         rating: Joi.number().min(1).max(5),
-        image: Joi.string(),
     }).required()
 })

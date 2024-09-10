@@ -35,7 +35,7 @@ router.get('/:id', catchAsync(products.showProduct))
 // 제품수정(edit.ejs) 전송라우트
 router.get('/:id/edit', isLoggedIn, isAuthorProduct, catchAsync(products.renderEditForm))
 // 제품수정(edit.ejs) 폼에서 받아 제출라우트
-router.put('/:id', isLoggedIn, isAuthorProduct, validateProduct, catchAsync(products.editProduct))
+router.put('/:id', isLoggedIn, isAuthorProduct, upload.array('image'), validateProduct, catchAsync(products.editProduct))
 
 // 제품 삭제 라우트
 router.delete('/:id', isLoggedIn, isAuthorProduct, catchAsync(products.deleteProduct))

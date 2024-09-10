@@ -1,5 +1,6 @@
 const Product = require('../models/product'); //스키마 가져오기
 const User = require('../models/user')
+const { cloudinary } = require('../cloudinary');
 
 // index 전송 라우트
 module.exports.index = async (req, res) => {
@@ -52,7 +53,17 @@ module.exports.renderEditForm = async (req, res) => {
 // edit 제품 수정 제출라우트
 module.exports.editProduct = async (req, res) => {
     const { id } = req.params;
-    const product = await Product.findByIdAndUpdate(id, { ...req.body.product })
+    const product = await Product.findByIdAndUpdate(id, { ...req.body.product });
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    product.images.push(...imgs);
+    await product.save();
+    // 이미지를 DB와 Cloudinary에서 삭제하는 함수
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await product.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+    }
     req.flash('success', 'Successfully updated product!')
     res.redirect(`/products/${product._id}`)
 }
@@ -60,7 +71,6 @@ module.exports.editProduct = async (req, res) => {
 // 제품 삭제 라우트
 module.exports.deleteProduct = async (req, res) => {
     const { id } = req.params;
-    console.log(id, req.user.id)
     await User.findByIdAndUpdate(req.user.id, { $pull: { products: id } })
     await Product.findByIdAndDelete(id)
     req.flash('success', 'Successfully deleted product!')
