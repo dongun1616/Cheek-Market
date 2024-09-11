@@ -36,7 +36,6 @@ module.exports.isAuthorProduct = async (req, res, next) => {
 module.exports.isAuthorProfile = async (req, res, next) => {
     const { id } = req.user;
     const user = await User.findById(id);
-    console.log(user)
     if (!user._id.equals(req.user._id)) {
         req.flash('error', 'You do not have permission to do that!');
         return res.redirect(`/users/${id}`)
