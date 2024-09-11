@@ -5,7 +5,12 @@
         <div class="card mb-3">
             <div class="row">
                 <div class="col-md-4">
-                    <img class="img-fluid" alt="" src="<%= product.images[0].url %>">
+                    <% if(product.images.length){ %>
+                        <img class="img-fluid" alt="" src="<%= product.images[0].url %>">
+                        <% }else {%>
+                            <img class="img-fluid" alt=""
+                                src="https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif">
+                            <% } %>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
