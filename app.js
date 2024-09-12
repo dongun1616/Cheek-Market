@@ -72,13 +72,13 @@ app.use((req, res, next) => {
     next();
 })
 
-// 로그인 하드코딩
-app.get('/fakeUser', async (req, res) => {
-    const user = new User({ email: 'dong@gmail.com', username: 'dong' })
-    const newUser = await User.register(user, 'chicken');
-    //주어진 암호로 새로운 사용자 인스턴스를 등록하는 메서드이다.(중복여부도 확인)
-    res.send(newUser);
-})
+// // 로그인 하드코딩
+// app.get('/fakeUser', async (req, res) => {
+//     const user = new User({ email: 'dong@gmail.com', username: 'dong' })
+//     const newUser = await User.register(user, 'chicken');
+//     //주어진 암호로 새로운 사용자 인스턴스를 등록하는 메서드이다.(중복여부도 확인)
+//     res.send(newUser);
+// })
 
 //라우트 접두사 지정
 app.use('/', userRoutes); //유저 라우트 지정

@@ -1,19 +1,12 @@
 <% layout('layouts/boilerplate') %>
-    <h1>All Products</h1>
-    <form action="/products/search?_method=PUT" method="GET" novalidate class="validated-form">
-        <div class="container input-group mb-1">
-            <input type="text" class="form-control" id="search-input" name="inputText"
-                placeholder="Please enter your keyword(s) to search.">
-            <button class="input-group-append btn" id="search" style="background-color: #FDFD96">Search</button>
-        </div>
-    </form>
+    <h1>Search results Products</h1>
 
-    <% for (let product of products ) {%>
+    <% for (let title of titles ) {%>
         <div class="card mb-3">
             <div class="row">
                 <div class="col-md-4">
-                    <% if(product.images.length){ %>
-                        <img class="img-fluid" alt="" src="<%= product.images[0].url %>">
+                    <% if(title.images.length){ %>
+                        <img class="img-fluid" alt="" src="<%= title.images[0].url %>">
                         <% }else {%>
                             <img class="img-fluid" alt=""
                                 src="https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif">
@@ -22,24 +15,24 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <%= product.title %>
+                            <%= title.title %>
                         </h5>
                         <p class="card-text">
                             <small class="text-muted">
-                                <a href="/users/<%= product.author._id %>">
-                                    <%= product.author.username %>
+                                <a href="/users/<%= title.author._id %>">
+                                    <%= title.author.username %>
                                 </a>
                             </small>
                         </p>
                         <p class="card-text">
                             <small class="text-muted">
-                                <%= product.location %>
+                                <%= title.location %>
                             </small>
                         </p>
                         <p class="card-text">
-                            <%= product.price %>₩
+                            <%= title.price %>₩
                         </p>
-                        <a class="btn btn-primary" href="/products/<%= product._id %>">View <%= product.title %>
+                        <a class="btn btn-primary" href="/products/<%= title._id %>">View <%= title.title %>
                         </a>
                     </div>
                 </div>

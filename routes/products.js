@@ -24,6 +24,9 @@ const validateProduct = (req, res, next) => {
 // 메인(index.ejs) 전송 메인라우트
 router.get('/', catchAsync(products.index))
 
+// 제품 검색 라우트
+router.get("/search", catchAsync(products.search))
+
 // 제품생성(new.ejs)전송라우트(new 라우트는 :id를 사용한 라우트보다 위에 있어야 한다.)
 router.get('/new', isLoggedIn, products.renderNewForm)
 // 제품생성(new.ejs) 제출라우트
