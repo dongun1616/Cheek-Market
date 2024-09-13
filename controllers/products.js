@@ -11,14 +11,8 @@ module.exports.index = async (req, res) => {
 // 제품 검색 라우트
 module.exports.search = async (req, res) => {
     const keyword = req.query.inputText; // 쿼리 스트링에서 'keyword' 파라미터 읽기
-    console.log(keyword)
     const titles = await Product.find({ title: { $regex: keyword } })
-    // 검색어가 없을시 플래시 에러
-    if (titles < 1) {
-        req.flash('error', 'Cannot find that product!');
-        return res.redirect('/products')
-    }
-    res.render('products/search', { titles }) //titles 불러와서 렌더링
+    res.render('products/search', { titles, keyword }) //titles , keyword 불러와서 렌더링
 }
 
 // new 제품생성폼 전송 라우트

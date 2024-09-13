@@ -1,41 +1,57 @@
 <% layout('layouts/boilerplate') %>
     <h1>Search results Products</h1>
-
-    <% for (let title of titles ) {%>
+    <form action="/products/search?_method=PUT" method="GET" novalidate class="validated-form">
+        <div class="container input-group mb-1">
+            <input type="text" class="form-control" id="search-input" name="inputText"
+                placeholder="Please enter your keyword(s) to search.">
+            <button class="input-group-append btn" id="search" style="background-color: #FDFD96">Search</button>
+        </div>
+    </form>
+    <% if(titles < 1) {%>
         <div class="card mb-3">
             <div class="row">
-                <div class="col-md-4">
-                    <% if(title.images.length){ %>
-                        <img class="img-fluid" alt="" src="<%= title.images[0].url %>">
-                        <% }else {%>
-                            <img class="img-fluid" alt=""
-                                src="https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif">
-                            <% } %>
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= title.title %>
-                        </h5>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <a href="/users/<%= title.author._id %>">
-                                    <%= title.author.username %>
-                                </a>
-                            </small>
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <%= title.location %>
-                            </small>
-                        </p>
-                        <p class="card-text">
-                            <%= title.price %>₩
-                        </p>
-                        <a class="btn btn-primary" href="/products/<%= title._id %>">View <%= title.title %>
-                        </a>
-                    </div>
-                </div>
+                <h4 class="card-text mb-4 mt-4 text-center">
+                    There are no search results for <b>'<%= keyword %>'</b>
+                </h4>
             </div>
         </div>
-        <% } %>
+        <% } else {%>
+            <% for (let title of titles ) {%>
+                <div class="card mb-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <% if(title.images.length){ %>
+                                <img class="img-fluid" alt="" src="<%= title.images[0].url %>">
+                                <% }else {%>
+                                    <img class="img-fluid" alt=""
+                                        src="https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif">
+                                    <% } %>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= title.title %>
+                                </h5>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <a href="/users/<%= title.author._id %>">
+                                            <%= title.author.username %>
+                                        </a>
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <%= title.location %>
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <%= title.price %>₩
+                                </p>
+                                <a class="btn btn-primary" href="/products/<%= title._id %>">View <%= title.title %>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                    <% } %>
