@@ -7,7 +7,6 @@ module.exports.index = async (req, res) => {
     const products = await Product.find({}).populate('author');
     res.render('products/index', { products }) //products 불러와서 렌더링
 }
-
 // 제품 검색 라우트
 module.exports.search = async (req, res) => {
     const keyword = req.query.inputText; // 쿼리 스트링에서 'keyword' 파라미터 읽기
