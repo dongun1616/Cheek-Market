@@ -7,7 +7,7 @@
             <button class="input-group-append btn" id="search" style="background-color: #FDFD96">Search</button>
         </div>
     </form>
-    <% if(titles < 1) {%>
+    <% if(titles < 1 && locations <1) {%>
         <div class="card mb-3">
             <div class="row">
                 <h4 class="card-text mb-4 mt-4 text-center">
@@ -54,4 +54,43 @@
                     </div>
                 </div>
                 <% } %>
-                    <% } %>
+                    <% for (let location of locations ) {%>
+                        <div class="card mb-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <% if(location.images.length){ %>
+                                        <img class="img-fluid" alt="" src="<%= location.images[0].url %>">
+                                        <% }else {%>
+                                            <img class="img-fluid" alt=""
+                                                src="https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif">
+                                            <% } %>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <%= location.title %>
+                                        </h5>
+                                        <p class="card-text">
+                                            <small class="text-muted">
+                                                <a href="/users/<%= location.author._id %>">
+                                                    <%= location.author.username %>
+                                                </a>
+                                            </small>
+                                        </p>
+                                        <p class="card-text">
+                                            <small class="text-muted">
+                                                <%= location.location %>
+                                            </small>
+                                        </p>
+                                        <p class="card-text">
+                                            <%= location.price %>₩
+                                        </p>
+                                        <a class="btn btn-primary" href="/products/<%= location._id %>">View <%=
+                                                location.title %>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                            <% } %>

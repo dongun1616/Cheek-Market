@@ -11,7 +11,8 @@ module.exports.index = async (req, res) => {
 module.exports.search = async (req, res) => {
     const keyword = req.query.inputText; // 쿼리 스트링에서 'keyword' 파라미터 읽기
     const titles = await Product.find({ title: { $regex: keyword } })
-    res.render('products/search', { titles, keyword }) //titles , keyword 불러와서 렌더링
+    const locations = await Product.find({ location: { $regex: keyword } })
+    res.render('products/search', { titles, locations, keyword }) //titles , locations, keyword 불러와서 렌더링
 }
 
 // new 제품생성폼 전송 라우트
