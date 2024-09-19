@@ -26,8 +26,8 @@ const seedDb = async () => { //랜덤하게 50개의 제품 및 위치 배정하
             price: rndPrice,
             images: [
                 {
-                    url: 'https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif',
-                    filename: 'Cheek-Market/w8rlv1gs1g8dfa9stzx9',
+                    url: 'https://res.cloudinary.com/dp8tgre1c/image/upload/v1726732108/Cheek-Market/tdbhejrupl8zulmti2cy.jpg',
+                    filename: 'Cheek-Market/tdbhejrupl8zulmti2cy',
                 }
             ]
         })
