@@ -4,7 +4,7 @@ const { cloudinary } = require('../cloudinary');
 
 // index 전송 라우트
 module.exports.index = async (req, res) => {
-    const products = await Product.find({}).populate('author');
+    const products = await Product.find({}).sort({ _id: -1 }).populate('author');
     res.render('products/index', { products }) //products 불러와서 렌더링
 }
 // 제품 검색 라우트
