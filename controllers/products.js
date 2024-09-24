@@ -58,6 +58,7 @@ module.exports.renderEditForm = async (req, res) => {
     }
     res.render('products/edit', { product })
 }
+
 // edit 제품 수정 제출라우트
 module.exports.editProduct = async (req, res) => {
     const { id } = req.params;
