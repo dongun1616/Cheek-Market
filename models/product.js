@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Review = require('./review')
+const Review = require('./review');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
@@ -26,7 +26,11 @@ const ProductSchema = new Schema({ //메인제품 스키마
             type: Schema.Types.ObjectId,
             ref: 'Review'
         }
-    ]
+    ],
+    like: {
+        type: Number,
+        default: 0,
+    }
 });
 //스키마 안에 임시로 리뷰 넣어둠 ->나중에 사용자 모델에 옮길예정
 

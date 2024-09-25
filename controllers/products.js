@@ -48,6 +48,24 @@ module.exports.showProduct = async (req, res) => {
     res.render('products/show', { product }) //product 불러와서 렌더링
 }
 
+// like 제품 좋아요 전송 라우트
+module.exports.likeProduct = async (req, res) => {
+    const product = await Product.findById(req.params.id)
+    const user = await User.findById(req.user._id)
+    const productAuthorId = product.author.toString()
+    const userId = user._id.toString()
+    if (productAuthorId == userId) {
+        product.like = product.like += 1;
+        await product.save();
+        console.log(product.like)
+    } else {
+        product.like = product.like -= 1;
+        await product.save();
+        console.log(product.like)
+    }
+    res.redirect(`/products/${product._id}`)
+}
+
 // edit 제품수정폼 전송 라우트
 module.exports.renderEditForm = async (req, res) => {
     const { id } = req.params;

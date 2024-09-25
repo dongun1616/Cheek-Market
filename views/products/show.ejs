@@ -30,6 +30,13 @@
                     <p class="card-text">
                         <%= product.description %>
                     </p>
+                    <form action="/products/<%= product._id%>/like?_method=PUT" method="GET" novalidate
+                        class="validated-form">
+                        <div class="card-text">
+                            <button class=" btn btn-danger" id="like" name="product[likes]">&#9829; <%= product.like %>
+                                    </button>
+                        </div>
+                    </form>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-muted">
