@@ -1,5 +1,6 @@
 const Product = require('../models/product'); //스키마 가져오기
 const User = require('../models/user')
+const Like = require('../models/like')
 const { cloudinary } = require('../cloudinary');
 
 // index 전송 라우트
@@ -51,8 +52,10 @@ module.exports.showProduct = async (req, res) => {
 module.exports.likeProduct = async (req, res) => {
     const product = await Product.findById(req.params.id)
     const user = await User.findById(req.user._id)
-    const productAuthorId = product.author.toString()
-    const userId = user._id.toString()
+    // const like = await Like.findById(req.body.like);
+    const productId = product.id // 제품 아이디
+    const productAuthorId = product.author.toString() //제품 작성자 아이디
+    const userId = user._id.toString() //로그인한 아이디
     if (productAuthorId == userId) {
         product.like = product.like += 1;
         await product.save();
