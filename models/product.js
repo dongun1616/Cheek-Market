@@ -29,7 +29,7 @@ const ProductSchema = new Schema({ //메인제품 스키마
     ],
     likes:
     {
-        type: [String],
+        type: [String], //배열안에 문자열로 추가
         default: []
     }
 });

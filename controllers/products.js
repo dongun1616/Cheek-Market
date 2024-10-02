@@ -41,12 +41,12 @@ module.exports.showProduct = async (req, res) => {
             path: 'author'
         }
     }).populate('author');
-    const userId = req.user._id.toString(); // 인증된 사용자 ID
+    const userId = req.user ? req.user._id.toString() : null; // req.user가 있으면 변환 없으면 null
     if (!product) {
         req.flash('error', 'Cannot find that product!');
         return res.redirect('/products')
     }
-    res.render('products/show', { product, userId }) //product 불러와서 렌더링
+    res.render('products/show', { product, userId }) //product, userId 불러와서 렌더링
 }
 // like 제품 좋아요 전송 라우트
 module.exports.likeProduct = async (req, res) => {
@@ -61,13 +61,12 @@ module.exports.likeProduct = async (req, res) => {
     }
 
     // 좋아요 추가
-    if (!product.likes.includes(userId)) {
+    if (!product.likes.includes(userId)) { //제품 모델 like안에 userId가 포함되어 있지 않으면
         product.likes.push(userId);
         await product.save();
         req.flash('success', 'You liked this product!'); // 플래시 메시지 설정
         return res.redirect(`/products/${productId}`); // 리다이렉트
     }
-
     req.flash('error', 'You already liked this product!'); // 플래시 메시지 설정
     return res.redirect(`/products/${productId}`); // 리다이렉트
 }
@@ -87,12 +86,12 @@ module.exports.likeDelete = async (req, res) => {
 
     // 좋아요 취소
     if (product.likes.includes(userId)) {
+        //현재 사용자의 ID가 포함되어 있는지 확인하고, 일치하지 않는 항목만 남깁니다.(삭제)
         product.likes = product.likes.filter(id => id.toString() !== userId.toString());
         await product.save();
         req.flash('success', 'You unliked this product!'); // 성공 메시지 설정
         return res.redirect(`/products/${productId}`); // 리다이렉트
     }
-
     req.flash('error', 'You have not liked this product yet!'); // 플래시 메시지 설정
     return res.redirect(`/products/${productId}`); // 리다이렉트
 }

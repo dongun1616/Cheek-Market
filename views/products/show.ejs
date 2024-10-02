@@ -30,23 +30,23 @@
                     <p class="card-text">
                         <%= product.description %>
                     </p>
-                    <form
-                        action="/products/<%= product._id %>/like?_method=<%= product.likes.includes(userId) ? 'DELETE' : 'PUT' %>"
-                        method="POST" novalidate class="validated-form">
-                        <div class="card-text">
-                            <% if (product.likes.includes(userId)) { %>
-                                <button type="submit" class="btn btn-danger">
-                                    ♥
-                                </button>
-                                <% } else { %>
-                                    <button type="submit" class="btn btn-light">
-                                        ♡
+                    <% if(currentUser) {%>
+                        <form
+                            action="/products/<%= product._id %>/like?_method=<%= product.likes.includes(userId) ? 'DELETE' : 'PUT' %>"
+                            method="POST" novalidate class="validated-form">
+                            <div class="card-text">
+                                <% if (product.likes.includes(userId)) { %>
+                                    <button type="submit" class="btn btn-danger">
+                                        ♥
                                     </button>
-                                    <% } %>
-
-                        </div>
-
-                    </form>
+                                    <% } else { %>
+                                        <button type="submit" class="btn btn-light">
+                                            ♡
+                                        </button>
+                                        <% } %>
+                            </div>
+                        </form>
+                        <% } %>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-muted">
