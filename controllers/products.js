@@ -1,6 +1,5 @@
 const Product = require('../models/product'); //스키마 가져오기
 const User = require('../models/user')
-const Like = require('../models/like')
 const { cloudinary } = require('../cloudinary');
 
 // index 전송 라우트
@@ -42,30 +41,60 @@ module.exports.showProduct = async (req, res) => {
             path: 'author'
         }
     }).populate('author');
+    const userId = req.user._id.toString(); // 인증된 사용자 ID
     if (!product) {
         req.flash('error', 'Cannot find that product!');
         return res.redirect('/products')
     }
-    res.render('products/show', { product }) //product 불러와서 렌더링
+    res.render('products/show', { product, userId }) //product 불러와서 렌더링
 }
 // like 제품 좋아요 전송 라우트
 module.exports.likeProduct = async (req, res) => {
-    const product = await Product.findById(req.params.id)
-    const user = await User.findById(req.user._id)
-    // const like = await Like.findById(req.body.like);
-    const productId = product.id // 제품 아이디
-    const productAuthorId = product.author.toString() //제품 작성자 아이디
-    const userId = user._id.toString() //로그인한 아이디
-    if (productAuthorId == userId) {
-        product.like = product.like += 1;
-        await product.save();
-        console.log(product.like)
-    } else {
-        product.like = product.like -= 1;
-        await product.save();
-        console.log(product.like)
+    const productId = req.params.id;
+    const userId = req.user._id.toString(); // 인증된 사용자 ID
+    // 제품 검색
+    const product = await Product.findById(productId);
+
+    if (!product) {
+        req.flash('error', 'Product not found'); // 플래시 메시지 설정
+        return res.redirect(`/products/${productId}`); // 리다이렉트
     }
-    res.redirect(`/products/${product._id}`)
+
+    // 좋아요 추가
+    if (!product.likes.includes(userId)) {
+        product.likes.push(userId);
+        await product.save();
+        req.flash('success', 'You liked this product!'); // 플래시 메시지 설정
+        return res.redirect(`/products/${productId}`); // 리다이렉트
+    }
+
+    req.flash('error', 'You already liked this product!'); // 플래시 메시지 설정
+    return res.redirect(`/products/${productId}`); // 리다이렉트
+}
+// like 제품 좋아요 삭제 라우트
+module.exports.likeDelete = async (req, res) => {
+    const productId = req.params.id;
+    const userId = req.user._id.toString(); // 인증된 사용자 ID
+
+    // 제품 검색
+    const product = await Product.findById(productId);
+
+    // 제품이 없는 경우
+    if (!product) {
+        req.flash('error', 'Product not found'); // 플래시 메시지 설정
+        return res.redirect(`/products/${productId}`); // 리다이렉트
+    }
+
+    // 좋아요 취소
+    if (product.likes.includes(userId)) {
+        product.likes = product.likes.filter(id => id.toString() !== userId.toString());
+        await product.save();
+        req.flash('success', 'You unliked this product!'); // 성공 메시지 설정
+        return res.redirect(`/products/${productId}`); // 리다이렉트
+    }
+
+    req.flash('error', 'You have not liked this product yet!'); // 플래시 메시지 설정
+    return res.redirect(`/products/${productId}`); // 리다이렉트
 }
 
 // edit 제품수정폼 전송 라우트

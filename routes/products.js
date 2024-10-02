@@ -35,7 +35,9 @@ router.post('/', isLoggedIn, upload.array('image'), validateProduct, catchAsync(
 // 제품상세(show.ejs) 전송라우트
 router.get('/:id', catchAsync(products.showProduct))
 // 제품 관심(like) 전송라우트
-router.get('/:id/like', isLoggedIn, catchAsync(products.likeProduct))
+router.put('/:id/like', isLoggedIn, catchAsync(products.likeProduct))
+// 제품 관심(like) 삭제라우트
+router.delete('/:id/like', isLoggedIn, catchAsync(products.likeDelete))
 
 // 제품수정(edit.ejs) 전송라우트
 router.get('/:id/edit', isLoggedIn, isAuthorProduct, catchAsync(products.renderEditForm))

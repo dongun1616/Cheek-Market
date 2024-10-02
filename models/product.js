@@ -27,9 +27,10 @@ const ProductSchema = new Schema({ //메인제품 스키마
             ref: 'Review'
         }
     ],
-    like: {
-        type: Number,
-        default: 0,
+    likes:
+    {
+        type: [String],
+        default: []
     }
 });
 //스키마 안에 임시로 리뷰 넣어둠 ->나중에 사용자 모델에 옮길예정
