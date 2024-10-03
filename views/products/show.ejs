@@ -37,16 +37,18 @@
                             <div class="card-text">
                                 <% if (product.likes.includes(userId)) { %>
                                     <button type="submit" class="btn btn-danger">
-                                        ♥
+                                        ♥ <%= product.likes.length %>
                                     </button>
                                     <% } else { %>
                                         <button type="submit" class="btn btn-light">
-                                            ♡
+                                            ♡ <%= product.likes.length %>
                                         </button>
                                         <% } %>
                             </div>
                         </form>
-                        <% } %>
+                        <% } else{%>
+                            ♡ <%= product.likes.length %>
+                                <% } %>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-muted">

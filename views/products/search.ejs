@@ -2,7 +2,7 @@
     <h1>Search results Products</h1>
     <form action="/products/search?_method=PUT" method="GET" novalidate class="validated-form">
         <div class="container input-group mb-1">
-            <input type="text" class="form-control" id="search-input" name="inputText"
+            <input type="text" class="form-control" id="search-input" name="inputText" value="<%= keyword %>"
                 placeholder="Please enter your keyword(s) to search.">
             <button class="input-group-append btn" id="search" style="background-color: #FDFD96">Search</button>
         </div>
@@ -47,8 +47,12 @@
                                 <p class="card-text">
                                     <%= title.price %>₩
                                 </p>
-                                <a class="btn btn-primary" href="/products/<%= title._id %>">View <%= title.title %>
-                                </a>
+                                <p class="card-text d-flex justify-content-between">
+                                    <a class="btn btn-primary" href="/products/<%= title._id %>">View <%= title.title %>
+                                    </a>
+                                    🤍<%= title.likes.length %>
+                                        🗨️ <%= title.reviews.length %>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -85,9 +89,13 @@
                                         <p class="card-text">
                                             <%= location.price %>₩
                                         </p>
-                                        <a class="btn btn-primary" href="/products/<%= location._id %>">View <%=
-                                                location.title %>
-                                        </a>
+                                        <p class="card-text d-flex justify-content-between">
+                                            <a class="btn btn-primary" href="/products/<%= location._id %>">View <%=
+                                                    location.title %>
+                                            </a>
+                                            🤍<%= location.likes.length %>
+                                                🗨️ <%= location.reviews.length %>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

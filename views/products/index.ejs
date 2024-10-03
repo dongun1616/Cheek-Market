@@ -39,8 +39,12 @@
                         <p class="card-text">
                             <%= product.price %>₩
                         </p>
-                        <a class="btn btn-primary" href="/products/<%= product._id %>">View <%= product.title %>
-                        </a>
+                        <p class="card-text d-flex justify-content-between">
+                            <a class="btn btn-primary" href="/products/<%= product._id %>">View <%= product.title %>
+                            </a>
+                            🤍<%= product.likes.length %>
+                                🗨️ <%= product.reviews.length %>
+                        </p>
                     </div>
                 </div>
             </div>
