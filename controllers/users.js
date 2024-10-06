@@ -139,9 +139,9 @@ module.exports.deleteProfile = async (req, res) => {
             }
         }
     );
-
     // 사용자 삭제
     await User.findByIdAndDelete(id);
+
     req.flash('success', 'Your profile and all associated reviews have been successfully deleted.');
     res.redirect('/products');
 }

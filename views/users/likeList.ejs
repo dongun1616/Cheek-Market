@@ -8,46 +8,48 @@
                 </h4>
             </div>
         </div>
-        <% } else {% <% for (let product of products ) {%>
-            <div class="card mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <% if(product.images.length){ %>
-                            <img class="img-fluid" alt="" src="<%= product.images[0].url %>">
-                            <% }else {%>
-                                <img class="img-fluid" alt=""
-                                    src="https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif">
-                                <% } %>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <%= product.title %>
-                            </h5>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    <a href="/users/<%= product.author._id %>">
-                                        <%= product.author.username %>
+        <% } else {%>
+            <% for (let product of products ) {%>
+                <div class="card mb-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <% if(product.images.length){ %>
+                                <img class="img-fluid" alt="" src="<%= product.images[0].url %>">
+                                <% }else {%>
+                                    <img class="img-fluid" alt=""
+                                        src="https://res.cloudinary.com/dp8tgre1c/image/upload/v1725891771/Cheek-Market/w8rlv1gs1g8dfa9stzx9.avif">
+                                    <% } %>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= product.title %>
+                                </h5>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <a href="/users/<%= product.author._id %>">
+                                            <%= product.author.username %>
+                                        </a>
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <%= product.location %>
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <%= product.price %>₩
+                                </p>
+                                <p class="card-text d-flex justify-content-between">
+                                    <a class="btn btn-primary" href="/products/<%= product._id %>">View <%=
+                                            product.title %>
                                     </a>
-                                </small>
-                            </p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    <%= product.location %>
-                                </small>
-                            </p>
-                            <p class="card-text">
-                                <%= product.price %>₩
-                            </p>
-                            <p class="card-text d-flex justify-content-between">
-                                <a class="btn btn-primary" href="/products/<%= product._id %>">View <%= product.title %>
-                                </a>
-                                🤍<%= product.likes.length %>
-                                    🗨️ <%= product.reviews.length %>
-                            </p>
+                                    🤍<%= product.likes.length %>
+                                        🗨️ <%= product.reviews.length %>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <% } %>
                 <% } %>
+                    <% } %>
