@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Product = require('../models/product');
 const Review = require('../models/review');
 
 //회원가입(register.ejs) 전송 라우트
@@ -70,6 +71,22 @@ module.exports.renderProfile = async (req, res) => {
     res.render('users/profile', { user, avgReviewRound, avgReviewPoint })
 }
 
+//사용자 관심목록(LikeList.ejs) 전송 라우트
+module.exports.likeList = async (req, res) => {
+    const userId = req.params.id.toString(); // 요청된 사용자 ID
+    const loggedInUserId = req.user._id.toString(); // 로그인된 사용자 ID
+
+    // 요청된 사용자 ID와 로그인된 사용자 ID가 다른 경우 접근 차단
+    if (userId !== loggedInUserId) {
+        req.flash('error', 'You do not have permission to view this page');
+        return res.redirect('/products'); // 접근 권한 없을 때 메인 페이지로 리다이렉트
+    }
+
+    // 사용자가 좋아요한 제품을 찾음
+    const products = await Product.find({ likes: userId }).populate('author');
+    res.render('users/likeList', { products });
+}
+
 // 프로필편집(profileEdit.ejs) 수정라우트
 module.exports.renderEditProfile = async (req, res) => {
     const { id } = req.params;
@@ -87,11 +104,44 @@ module.exports.editProfile = async (req, res) => {
 // 프로필 삭제 라우트
 module.exports.deleteProfile = async (req, res) => {
     const { id } = req.params;
-    // 리뷰 작성자 삭제 반복문
-    while (await Review.findOne({ author: id })) {
-        await Review.findOneAndDelete({ author: id })
-    }
-    await User.findByIdAndDelete(id)
-    req.flash('success', 'Successfully deleted user!')
+
+    // 사용자에서 리뷰 삭제
+    //사용자의 리뷰를 찾아 삭제
+    const deleteReviewsResult = await Review.find({ author: id });
+    const deletedReviewIds = deleteReviewsResult.map(review => review._id);
+
+    // 다른 사용자 프로필에서 해당 리뷰를 제거
+    await User.updateMany(
+        { 'reviews': { $in: deletedReviewIds } },
+        { $pull: { reviews: { $in: deletedReviewIds } } }
+    );
+    // 사용자 리뷰 삭제
+    await Review.deleteMany({ author: id });
+
+    // 제품에서 좋아요 리뷰 삭제
+    // 모든 제품에서 삭제된 리뷰를 참조하고 있는 사용자 리뷰 제거
+    await Product.updateMany(
+        { 'reviews': { $in: deletedReviewIds } }, // 삭제된 리뷰 ID가 있는 제품 찾기
+        { $pull: { reviews: { $in: deletedReviewIds } } } // 리뷰 배열에서 삭제
+    );
+    // 제품에서 사용자 ID 제거 및 삭제된 리뷰 ID 제거
+    await Product.updateMany(
+        {
+            $or: [
+                { likes: id },
+                { 'reviews.author': id }
+            ]
+        },
+        {
+            $pull: {
+                likes: id,
+                reviews: { author: id } // 리뷰 작성자를 제품 리뷰 배열에서 제거
+            }
+        }
+    );
+
+    // 사용자 삭제
+    await User.findByIdAndDelete(id);
+    req.flash('success', 'Your profile and all associated reviews have been successfully deleted.');
     res.redirect('/products');
 }

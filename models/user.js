@@ -31,29 +31,21 @@ const UserSchema = new Schema({
         }
     ],
 });
+
 //로그인시 필요한 사용자 이름과 비번을 사용하게해주는 플러그인
 UserSchema.plugin(passportLocalMongoose);
 
-//사용자 삭제시 제품을 같이 삭제시키는 미들웨어
+// 사용자 삭제 시 관련된 제품과 리뷰를 삭제하는 미들웨어
 UserSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
+
+        // 관련된 제품 삭제
         await Product.deleteMany({
             _id: {
                 $in: doc.products
             }
-        })
+        });
     }
-})
-
-//사용자 삭제시 리뷰을 같이 삭제시키는 미들웨어
-UserSchema.post('findOneAndDelete', async function (doc) {
-    if (doc) {
-        await Review.deleteMany({
-            _id: {
-                $in: doc.reviews
-            }
-        })
-    }
-})
+});
 
 module.exports = mongoose.model('User', UserSchema)

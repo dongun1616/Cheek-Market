@@ -36,6 +36,9 @@ router.get('/logout', users.logout);
 //프로필(profile.ejs) 전송 라우트
 router.get('/users/:id', catchAsync(users.renderProfile))
 
+//사용자 관심목록(likeList.ejs) 전송 라우트
+router.get('/users/:id/likeList', isLoggedIn, catchAsync(users.likeList))
+
 // 프로필편집(profileEdit.ejs) 수정라우트
 router.get('/users/:id/edit', isLoggedIn, isAuthorProfile, catchAsync(users.renderEditProfile))
 //프로필편집(profileEdit.ejs) 폼에서 받아 제출하는 곳

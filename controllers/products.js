@@ -48,10 +48,11 @@ module.exports.showProduct = async (req, res) => {
     }
     res.render('products/show', { product, userId }) //product, userId 불러와서 렌더링
 }
+
 // like 제품 좋아요 전송 라우트
-module.exports.likeProduct = async (req, res) => {
+module.exports.productToggleLike = async (req, res) => {
     const productId = req.params.id;
-    const userId = req.user._id.toString(); // 인증된 사용자 ID
+    const userId = req.user._id; // 인증된 사용자 ID
     // 제품 검색
     const product = await Product.findById(productId);
 
@@ -59,41 +60,20 @@ module.exports.likeProduct = async (req, res) => {
         req.flash('error', 'Product not found'); // 플래시 메시지 설정
         return res.redirect(`/products/${productId}`); // 리다이렉트
     }
+    // 좋아요 여부 확인 (ObjectId끼리 비교)
+    const liked = product.likes.some(id => id.equals(userId));
 
-    // 좋아요 추가
-    if (!product.likes.includes(userId)) { //제품 모델 like안에 userId가 포함되어 있지 않으면
-        product.likes.push(userId);
-        await product.save();
-        req.flash('success', 'You liked this product!'); // 플래시 메시지 설정
-        return res.redirect(`/products/${productId}`); // 리다이렉트
-    }
-    req.flash('error', 'You already liked this product!'); // 플래시 메시지 설정
-    return res.redirect(`/products/${productId}`); // 리다이렉트
-}
-// like 제품 좋아요 삭제 라우트
-module.exports.likeDelete = async (req, res) => {
-    const productId = req.params.id;
-    const userId = req.user._id.toString(); // 인증된 사용자 ID
-
-    // 제품 검색
-    const product = await Product.findById(productId);
-
-    // 제품이 없는 경우
-    if (!product) {
-        req.flash('error', 'Product not found'); // 플래시 메시지 설정
-        return res.redirect(`/products/${productId}`); // 리다이렉트
-    }
-
-    // 좋아요 취소
-    if (product.likes.includes(userId)) {
-        //현재 사용자의 ID가 포함되어 있는지 확인하고, 일치하지 않는 항목만 남깁니다.(삭제)
-        product.likes = product.likes.filter(id => id.toString() !== userId.toString());
-        await product.save();
+    if (liked) {
+        // 이미 좋아요를 누른 상태라면, likes 배열에서 사용자 제거
+        product.likes = product.likes.filter(id => !id.equals(userId));
         req.flash('success', 'You unliked this product!'); // 성공 메시지 설정
-        return res.redirect(`/products/${productId}`); // 리다이렉트
+    } else {
+        // 좋아요를 누르지 않은 상태라면, likes 배열에 사용자 추가
+        product.likes.push(userId);
+        req.flash('success', 'You liked this product!'); // 성공 메시지 설정
     }
-    req.flash('error', 'You have not liked this product yet!'); // 플래시 메시지 설정
-    return res.redirect(`/products/${productId}`); // 리다이렉트
+    await product.save(); //변경사항 저장
+    res.redirect(`/products/${productId}`); // 리다이렉트
 }
 
 // edit 제품수정폼 전송 라우트

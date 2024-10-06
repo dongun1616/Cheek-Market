@@ -27,13 +27,13 @@ const ProductSchema = new Schema({ //메인제품 스키마
             ref: 'Review'
         }
     ],
-    likes:
-    {
-        type: [String], //배열안에 문자열로 추가
-        default: []
-    }
+    likes: [{
+        type: Schema.Types.ObjectId, //배열안에 문자열로 추가
+        ref: 'User'
+    }]
+
 });
-//스키마 안에 임시로 리뷰 넣어둠 ->나중에 사용자 모델에 옮길예정
+
 
 //제품 삭제시 리뷰를 같이 삭제시키는 미들웨어
 ProductSchema.post('findOneAndDelete', async function (doc) {
@@ -47,4 +47,4 @@ ProductSchema.post('findOneAndDelete', async function (doc) {
 })
 
 
-module.exports = mongoose.model('product', ProductSchema)
+module.exports = mongoose.model('Product', ProductSchema)

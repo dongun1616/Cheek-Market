@@ -19,7 +19,7 @@ const seedDb = async () => { //랜덤하게 50개의 제품 및 위치 배정하
     for (let i = 0; i < 50; i++) {
         const rndPrice = Math.floor(Math.random() * 100) * 100 + 500;// 랜덤한 가격변수
         const prod = new Product({
-            author: '66d5e2018683632c62efebd7',
+            author: '6702baffbed9cd24f96abf97',
             title: `${sample(products)}`,
             location: `${sample(places)}`,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit Illo iure blanditiis rem nulla assumenda aperiam similique nostrum tempore dolore sequi suscipit provident reiciendis quasi doloremque sit id ut temporibus corrupti',
