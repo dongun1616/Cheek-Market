@@ -83,7 +83,7 @@ module.exports.likeList = async (req, res) => {
     }
 
     // 사용자가 좋아요한 제품을 찾음
-    const products = await Product.find({ likes: userId }).populate('author');
+    const products = await Product.find({ likes: userId }).sort({ _id: -1 }).populate('author');
     res.render('users/likeList', { products });
 }
 
