@@ -22,7 +22,6 @@ module.exports.register = async (req, res, next) => {
         res.redirect('register');
     }
 }
-
 //로그인(login.ejs) 전송 라우트
 module.exports.renderLogin = (req, res) => {
     res.render('users/login');
