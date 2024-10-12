@@ -74,7 +74,6 @@ module.exports.productToggleLike = async (req, res) => {
     await product.save(); //변경사항 저장
     res.redirect(`/products/${productId}`); // 리다이렉트
 }
-
 // edit 제품수정폼 전송 라우트
 module.exports.renderEditForm = async (req, res) => {
     const { id } = req.params;
