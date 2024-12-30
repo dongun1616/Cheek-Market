@@ -10,8 +10,6 @@ const upload = multer({ storage })
 
 const ExpressError = require('../utils/ExpressError');
 
-//test565
-
 // JOI 제품 유효성 검사 함수
 const validateProduct = (req, res, next) => {
     const { error } = productSchema.validate(req.body);
