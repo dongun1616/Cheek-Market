@@ -12,7 +12,6 @@ module.exports.createUserReview = async (req, res) => {
     req.flash('success', 'Created new review!')
     res.redirect(`/users/${user._id}`);
 }
-
 // 사용자에 리뷰를 삭제하는 라우트
 module.exports.deleteUserReview = async (req, res) => {
     const { id, reviewId } = req.params;
