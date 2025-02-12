@@ -55,6 +55,7 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash()); //flash 사용
 
+
 //passport 세팅
 app.use(passport.initialize());
 app.use(passport.session());
