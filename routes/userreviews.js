@@ -17,6 +17,7 @@ const validateReview = (req, res, next) => {
         next();
     }
 }
+
 // 사용자에 리뷰작성하는 라우트
 router.post('/', isLoggedIn, validateReview, catchAsync(userReviews.createUserReview))
 
