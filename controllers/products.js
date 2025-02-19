@@ -15,7 +15,6 @@ module.exports.search = async (req, res) => {
     const locations = await Product.find({ location: { $regex: keyword, $options: 'i' } }).sort({ _id: -1 }).populate('author')
     res.render('products/search', { titles, locations, keyword }) //titles , locations, keyword 불러와서 렌더링
 }
-
 // new 제품생성폼 전송 라우트
 module.exports.renderNewForm = (req, res) => {
     res.render('products/new')
