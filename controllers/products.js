@@ -19,7 +19,6 @@ module.exports.search = async (req, res) => {
 module.exports.renderNewForm = (req, res) => {
     res.render('products/new')
 }
-
 // new 제품 생성 제출 라우트
 module.exports.createProduct = async (req, res) => {
     const user = await User.findById(req.user.id);
