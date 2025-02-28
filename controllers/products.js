@@ -49,7 +49,6 @@ module.exports.showProduct = async (req, res) => {
     }
     res.render('products/show', { product, userId }) //product, userId 불러와서 렌더링
 }
-
 // like 제품 좋아요 전송 라우트
 module.exports.productToggleLike = async (req, res) => {
     const productId = req.params.id;
