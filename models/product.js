@@ -36,15 +36,21 @@ const ProductSchema = new Schema({ //메인제품 스키마
 
 
 //제품 삭제시 리뷰를 같이 삭제시키는 미들웨어
+// ProductSchema.post('findOneAndDelete', async function (doc) {
+//     if (doc) {
+//         await Review.deleteMany({
+//             _id: {
+//                 $in: doc.reviews
+//             }
+//         })
+//     }
+// })
+// 제품 삭제 시 관련된 리뷰를 삭제하는 미들웨어
 ProductSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
-        await Review.deleteMany({
-            _id: {
-                $in: doc.reviews
-            }
-        })
+        await Review.deleteMany({ product_id: doc._id }); // ✅ product_id로 해당 제품과 관련된 리뷰 삭제
     }
-})
+});
 
 
 module.exports = mongoose.model('Product', ProductSchema)
