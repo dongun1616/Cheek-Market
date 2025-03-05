@@ -33,7 +33,6 @@ module.exports.createProduct = async (req, res) => {
     req.flash('success', 'Successfully made a new product!');
     res.redirect(`/products/${product._id}`)
 }
-
 // show 제품 상세 전송 라우트
 module.exports.showProduct = async (req, res) => {
     const product = await Product.findById(req.params.id).populate({ //중첩 채우기 
