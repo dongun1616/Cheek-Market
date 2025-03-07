@@ -123,6 +123,7 @@ module.exports.deleteProfile = async (req, res) => {
         { 'reviews': { $in: deletedReviewIds } }, // 삭제된 리뷰 ID가 있는 제품 찾기
         { $pull: { reviews: { $in: deletedReviewIds } } } // 리뷰 배열에서 삭제
     );
+
     // 제품에서 사용자 ID 제거 및 삭제된 리뷰 ID 제거
     await Product.updateMany(
         {
