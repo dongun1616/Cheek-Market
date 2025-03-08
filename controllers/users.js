@@ -99,7 +99,6 @@ module.exports.editProfile = async (req, res) => {
     req.flash('success', 'Successfully updated users!')
     res.redirect(`/users/${user._id}`)
 }
-
 // 프로필 삭제 라우트
 module.exports.deleteProfile = async (req, res) => {
     const { id } = req.params;
