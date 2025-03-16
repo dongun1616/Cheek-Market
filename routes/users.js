@@ -7,8 +7,7 @@ const { userSchema } = require('../schemas')
 const { storeReturnTo, isLoggedIn, isAuthorProfile } = require('../middleware');
 
 const ExpressError = require('../utils/ExpressError');
-const Review = require('../models/review')
-const User = require('../models/user')
+
 
 const validateProfile = (req, res, next) => {
     const { error } = userSchema.validate(req.body);
@@ -35,6 +34,9 @@ router.get('/logout', users.logout);
 
 //프로필(profile.ejs) 전송 라우트
 router.get('/users/:id', catchAsync(users.renderProfile))
+
+//프로필 판매목록(saleList.ejs) 전송 라우트
+router.get('/users/:id/saleList', catchAsync(users.saleList))
 
 //사용자 관심목록(likeList.ejs) 전송 라우트
 router.get('/users/:id/likeList', isLoggedIn, catchAsync(users.likeList))

@@ -70,8 +70,29 @@ module.exports.renderProfile = async (req, res) => {
     res.render('users/profile', { user, avgReviewRound, avgReviewPoint })
 }
 
+//사용자 판매목록(SaleList.ejs) 전송 라우트
+module.exports.saleList = async (req, res) => {
+    const user = await User.findById(req.params.id).populate({
+        path: 'products',
+        populate: {
+            path: 'author'
+        }
+    });
+    const userId = req.params.id.toString(); // 요청된 사용자 ID
+
+    // 사용자가 판매중인 제품을 찾음
+    const products = await Product.find({ author: userId }).sort({ _id: -1 }).populate('author');
+    res.render('users/saleList', { products, user });
+}
+
 //사용자 관심목록(LikeList.ejs) 전송 라우트
 module.exports.likeList = async (req, res) => {
+    const user = await User.findById(req.params.id).populate({
+        path: 'products',
+        populate: {
+            path: 'author'
+        }
+    });
     const userId = req.params.id.toString(); // 요청된 사용자 ID
     const loggedInUserId = req.user._id.toString(); // 로그인된 사용자 ID
 
@@ -83,7 +104,7 @@ module.exports.likeList = async (req, res) => {
 
     // 사용자가 좋아요한 제품을 찾음
     const products = await Product.find({ likes: userId }).sort({ _id: -1 }).populate('author');
-    res.render('users/likeList', { products });
+    res.render('users/likeList', { products, user });
 }
 
 // 프로필편집(profileEdit.ejs) 수정라우트
