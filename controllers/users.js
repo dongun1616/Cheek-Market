@@ -84,7 +84,6 @@ module.exports.saleList = async (req, res) => {
     const products = await Product.find({ author: userId }).sort({ _id: -1 }).populate('author');
     res.render('users/saleList', { products, user });
 }
-
 //사용자 관심목록(LikeList.ejs) 전송 라우트
 module.exports.likeList = async (req, res) => {
     const user = await User.findById(req.params.id).populate({
