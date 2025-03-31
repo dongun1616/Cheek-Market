@@ -70,7 +70,7 @@ module.exports.renderProfile = async (req, res) => {
     res.render('users/profile', { user, avgReviewRound, avgReviewPoint })
 }
 
-//사용자 판매목록(SaleList.ejs) 전송 라우트
+//사용자 판매목록(SaleList.ejs) 전송 라우트 ve2
 module.exports.saleList = async (req, res) => {
     const user = await User.findById(req.params.id).populate({
         path: 'products',
